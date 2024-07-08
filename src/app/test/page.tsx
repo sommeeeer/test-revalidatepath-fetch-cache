@@ -2,7 +2,7 @@ import RefreshButton from '@/components/refresh-button';
 import RevalidateButton from '@/components/revalidate-button';
 
 export default async function Home() {
-  const res = await fetch('https://worldtimeapi.org/api/timezone/Europe/Oslo');
+  const res = await fetch('http://worldtimeapi.org/api/timezone/Europe/Oslo');
   const data = await res.json();
   const datetime = data.datetime;
 
@@ -15,10 +15,11 @@ export default async function Home() {
       </h1>
       <div className="mt-12 flex flex-col gap-4 items-center">
         <h4 className="text-xl">
-          Testing out <span className="font-bold">{'revalidatePath("/")'}</span>{' '}
-          to purge the fetch cache
+          Testing out{' '}
+          <span className="font-bold">{'revalidatePath("/test")'}</span> to
+          purge the fetch cache
         </h4>
-        <RevalidateButton route="/" />
+        <RevalidateButton route="/test" />
       </div>
     </main>
   );
