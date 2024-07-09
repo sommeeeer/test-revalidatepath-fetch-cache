@@ -1,5 +1,5 @@
 import { SSTConfig } from 'sst';
-import { NextjsSite } from 'sst/constructs';
+import { Config, NextjsSite } from 'sst/constructs';
 
 export default {
   config(_input) {
@@ -12,6 +12,10 @@ export default {
     app.stack(function Site({ stack }) {
       const site = new NextjsSite(stack, 'site', {
         permissions: ['ssm'],
+      });
+
+      new Config.Parameter(stack, 'FRONTEND_DISTRIBUTION_ID', {
+        value: site.cdk?.distribution?.distributionId ?? 'localhost',
       });
 
       stack.addOutputs({

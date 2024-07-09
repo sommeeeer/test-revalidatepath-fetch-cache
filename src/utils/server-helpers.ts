@@ -3,20 +3,20 @@ import {
   CloudFrontClient,
   CreateInvalidationCommand,
 } from '@aws-sdk/client-cloudfront';
-// import { SSMClient, GetParametersCommand } from '@aws-sdk/client-ssm';
+import { SSMClient, GetParametersCommand } from '@aws-sdk/client-ssm';
 
 const cloudFront = new CloudFrontClient({});
-// const ssm = new SSMClient({});
+const ssm = new SSMClient({});
 
 export async function invalidateCloudFrontPaths(paths: string[]) {
   try {
-    // const distributionId = await getDistributionId();
-    // if (!distributionId) {
-    //   throw new Error('Distribution ID not found');
-    // }
+    const distributionId = await getDistributionId();
+    if (!distributionId) {
+      throw new Error('Distribution ID not found');
+    }
     return await cloudFront.send(
       new CreateInvalidationCommand({
-        DistributionId: 'YOUR_DISTRIBUTION_ID',
+        DistributionId: distributionId,
         InvalidationBatch: {
           CallerReference: `${Date.now()}`,
           Paths: {
@@ -31,14 +31,14 @@ export async function invalidateCloudFrontPaths(paths: string[]) {
   }
 }
 
-// async function getDistributionId() {
-//   const domain = await ssm.send(
-//     new GetParametersCommand({
-//       Names: [
-//         `${process.env.SST_SSM_PREFIX}Parameter/FRONTEND_DISTRIBUTION_ID/value`,
-//       ],
-//       WithDecryption: false,
-//     })
-//   );
-//   return domain.Parameters?.[0]?.Value ?? null;
-// }
+async function getDistributionId() {
+  const domain = await ssm.send(
+    new GetParametersCommand({
+      Names: [
+        `${process.env.SST_SSM_PREFIX}Parameter/FRONTEND_DISTRIBUTION_ID/value`,
+      ],
+      WithDecryption: false,
+    })
+  );
+  return domain.Parameters?.[0]?.Value ?? null;
+}
