@@ -1,4 +1,4 @@
-import { revalidatePath } from 'next/cache';
+import { revalidateTag } from 'next/cache';
 
 import { invalidateCloudFrontPaths } from '@/utils/server-helpers';
 
@@ -6,7 +6,7 @@ export async function POST(request: Request) {
   const body = await request.json();
   const route = body.route as string;
   try {
-    revalidatePath(route);
+    revalidateTag('datetime');
     if (!process.env.DISABLE_CF_INVALIDATION) {
       console.log('[CF_INVALIDATE] route: ', route);
       const output = await invalidateCloudFrontPaths([route]);
@@ -17,7 +17,7 @@ export async function POST(request: Request) {
         'Revalidation successful, you can now refresh the page for new data.',
     });
   } catch (err) {
-    console.error('Revalidation failed', err);
+    console.error('[CF_INVALIDATE] failed', err);
     return Response.json({
       revalidated: 'Revalidation failed',
     });

@@ -14,6 +14,11 @@ export default function Navbar() {
             /test
           </Link>
         </li>
+        <li>
+          <Link className="font-bold text-2xl underline" href="/tag">
+            /tag
+          </Link>
+        </li>
       </ul>
     </nav>
   );
