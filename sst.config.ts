@@ -12,6 +12,7 @@ export default {
     app.stack(function Site({ stack }) {
       const site = new NextjsSite(stack, 'site', {
         permissions: ['ssm'],
+        // openNextVersion: '3.0.6',
       });
 
       new Config.Parameter(stack, 'FRONTEND_DISTRIBUTION_ID', {
